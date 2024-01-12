@@ -40,3 +40,27 @@
 .read-the-docs {
   color: #888;
 } */
+
+.padding-x {
+  padding-left: 16rem;
+  padding-right: 16rem;
+}
+
+.button-color {
+  background-color: rgb(32, 123, 68);
+  transition: background-color 0.3s ease, color 0.3s ease;
+}
+
+.button-color:hover {
+  background-color: rgb(25, 155, 77);
+}
+
+.button-outline-green {
+  border-color: rgb(32, 123, 68);
+  color: rgb(32, 123, 68);
+}
+
+.button-outline-green:hover {
+  color: red;
+  border-color: red;
+}
