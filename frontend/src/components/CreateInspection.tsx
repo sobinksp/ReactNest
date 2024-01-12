@@ -1,5 +1,6 @@
 import { ChangeEvent, useState } from "react";
 import Header from "./Header";
+import { useNavigate } from "react-router-dom";
 const CreateInspection = () => {
   const example_data = [
     {
@@ -12,7 +13,7 @@ const CreateInspection = () => {
       name: "standard 2",
     },
   ];
-
+  const navigate = useNavigate();
   const [price, setPrice] = useState("");
   const [standard, setStandard] = useState("");
   const isValidPrice = (input: number) => {
@@ -20,7 +21,6 @@ const CreateInspection = () => {
       String(input)
     );
   };
-
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
 
@@ -28,7 +28,9 @@ const CreateInspection = () => {
       setPrice(value);
     }
   };
-
+  const handleCancelClick = () => {
+    navigate("/");
+  };
   return (
     <Header>
       <h1 className="text-center mb-4">{"Create  Inspection"}</h1>
@@ -132,6 +134,7 @@ const CreateInspection = () => {
               <div className="d-flex justify-content-end">
                 <button
                   className="btn button-outline-green fw-semibold"
+                  onClick={handleCancelClick}
                   style={{ marginRight: "10px" }}
                 >
                   Cancel
