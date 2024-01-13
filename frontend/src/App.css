@@ -64,3 +64,11 @@
   color: red;
   border-color: red;
 }
+
+body {
+  background-color: rgb(253, 253, 253);
+}
+
+.card-color {
+  background-color: rgb(255, 255, 255);
+}

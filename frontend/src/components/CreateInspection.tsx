@@ -35,7 +35,7 @@ const CreateInspection = () => {
     <Header>
       <h1 className="text-center mb-4">{"Create  Inspection"}</h1>
       <div className="d-flex justify-content-center ">
-        <div className="card" style={{ width: "60vh" }}>
+        <div className="card shadow border-white" style={{ width: "60vh" }}>
           <div className="card-body">
             <form>
               <div className="d-flex flex-column mb-2">

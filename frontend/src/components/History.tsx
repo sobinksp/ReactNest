@@ -17,11 +17,16 @@ function History() {
 
         <button
           onClick={handleClick}
-          className="btn text-white button-color"
+          className="btn text-white button-color mb-4"
           //   style={{ background: "rgb(32, 123, 68)" }}
         >
           Create Inspection
         </button>
+      </div>
+      <div className="padding-x">
+        <div className="card">
+          <div className="card-body "></div>
+        </div>
       </div>
     </Header>
   );
