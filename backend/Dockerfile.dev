@@ -1,0 +1,15 @@
+FROM node:20-alpine
+
+# Create app directory inside container
+WORKDIR /app
+
+# ensure both package.json and package-lock.json are copied
+COPY package*json ./
+
+RUN npm install
+
+COPY . .
+
+RUN npm run build
+
+CMD ["npm", "run", "start:dev"]
