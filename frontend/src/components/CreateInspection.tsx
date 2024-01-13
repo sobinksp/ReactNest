@@ -1,26 +1,45 @@
-import { ChangeEvent, useState } from "react";
+import { ChangeEvent, useEffect, useState } from "react";
 import Header from "./Header";
 import { useNavigate } from "react-router-dom";
-const CreateInspection = () => {
-  const example_data = [
-    {
-      id: 1,
-      name: "standard 1",
-    },
+import { BASE_API_URL } from "../ApiConfig";
+// import styled from "styled-components";
 
-    {
-      id: 2,
-      name: "standard 2",
-    },
-  ];
+interface Standard {
+  id: string;
+  name: string;
+  createDate: string;
+  standardData: string[];
+}
+
+const CreateInspection = () => {
+  //   const CustomSelect = styled.select`
+  //     option[value=""] {
+  //       color: blue;
+  //     }
+  //   `;
   const navigate = useNavigate();
   const [price, setPrice] = useState("");
-  const [standard, setStandard] = useState("");
+  const [standards, setStandards] = useState<Standard[]>([]);
+
+  const fetchStandards = async () => {
+    try {
+      const res = await fetch(`${BASE_API_URL}/standard`);
+      const data = await res.json();
+      setStandards(data);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+  useEffect(() => {
+    fetchStandards();
+  }, []);
+
   const isValidPrice = (input: number) => {
     return /^(100000(\.0{1,2})?|([1-9]\d{0,4}(\.\d{1,2})?|0(\.\d{1,2})?))$/.test(
       String(input)
     );
   };
+
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { id, value } = e.target;
 
@@ -28,9 +47,11 @@ const CreateInspection = () => {
       setPrice(value);
     }
   };
+
   const handleCancelClick = () => {
     navigate("/");
   };
+
   return (
     <Header>
       <h1 className="text-center mb-4">{"Create  Inspection"}</h1>
@@ -51,17 +72,27 @@ const CreateInspection = () => {
               </div>
               <div className="d-flex flex-column mb-2">
                 <label className="fw-semibold form-label">Name*</label>
-                <select className="form-select text-muted " required>
-                  <option value="" disabled={true} selected>
+                <select className="form-select" required>
+                  {/* <option value="" disabled={true}> */}
+                  <option style={{ backgroundColor: "green" }} hidden value="">
                     Please Select Standard
                   </option>
-                  {example_data.map((item) => (
-                    <option key={item.id} value={item.name}>
-                      {item.name}
+                  {standards.map((standard) => (
+                    <option key={standard.id} value={standard.name}>
+                      {standard.name}
                     </option>
                   ))}
                 </select>
+                {/* <CustomSelect>
+                  <option hidden>Please Select Standard</option>
+                  {standards.map((standard) => (
+                    <option key={standard.id} value={standard.name}>
+                      {standard.name}
+                    </option>
+                  ))}
+                </CustomSelect> */}
               </div>
+
               <div className="d-flex flex-column">
                 <label className="fw-semibold form-label">Upload File</label>
                 <input
