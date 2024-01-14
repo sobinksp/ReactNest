@@ -20,7 +20,7 @@ const Home: React.FC<HomeProps> = ({ children }) => {
     <div>
       {/* <HeaderDiv className="fw-bold ">EASYRICE TEST</HeaderDiv> */}
       <div
-        className="fw-bold py-4 padding-x mb-4"
+        className="fw-bold py-4  mb-4"
         style={{
           backgroundColor: "rgb(241,241,241)",
           //   ...paddingXaxis,
@@ -28,7 +28,8 @@ const Home: React.FC<HomeProps> = ({ children }) => {
           //   paddingLeft: "4rem",
         }}
       >
-        EASYRICE TEST
+        <div className="container">EASYRICE TEST</div>
+        {/* EASYRICE TEST */}
       </div>
       {children}
     </div>
