@@ -14,4 +14,9 @@ export class InspectionService {
     const createdInspection = new this.inspectionModel(request);
     return createdInspection.save();
   }
+
+  async getAllInspection(): Promise<Inspection[]> {
+    const inspections = await this.inspectionModel.find();
+    return inspections;
+  }
 }

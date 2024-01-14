@@ -1,5 +1,6 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaTypes } from 'mongoose';
+import { v4 as uuidv4 } from 'uuid';
 
 @Schema({ collection: 'inspections' })
 export class Inspection extends Document {
@@ -9,27 +10,29 @@ export class Inspection extends Document {
   @Prop({ default: Date.now, type: SchemaTypes.Date })
   createDate: Date;
 
-  //   @Prop()
-  //   imageLink: string;
+  @Prop({ default: null })
+  imageLink?: string;
 
-  @Prop()
-  inspectionID: string;
+  @Prop({ unique: true, required: true, default: () => uuidv4() })
+  inspectionID?: string;
 
-  @Prop()
-  note: string;
+  @Prop({ default: null })
+  standardID: string;
+
+  @Prop({ default: null })
+  note?: string;
 
   @Prop()
   standardName: string;
 
-  //   @Prop()
-  //   samplingDate: Date;
+  @Prop({ default: null })
+  samplingDate?: Date;
 
-  //   @Prop()
-  //   samplingPoint: string[];
+  @Prop({ default: null })
+  samplingPoint?: string[];
 
-  @Prop()
-  price: number;
-
+  @Prop({ default: null })
+  price?: number;
   //   @Prop({ type: [StandardData] })
   @Prop()
   standardData: [
