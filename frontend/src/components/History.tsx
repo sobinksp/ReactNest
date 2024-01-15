@@ -1,14 +1,100 @@
 import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import { AiOutlineSearch } from "react-icons/ai";
-// import { IoIosAdd } from "react-icons/io";
+import { DataGrid, GridColDef } from "@mui/x-data-grid";
+import { GridRowSelectionModel, GridCallbackDetails } from "@mui/x-data-grid";
 import { MdAdd } from "react-icons/md";
+import { useEffect, useState } from "react";
+import { BASE_API_URL } from "../ApiConfig";
+import moment from "moment";
+
+const columns: GridColDef[] = [
+  { field: "createDate", headerName: "Create Date - Time", flex: 1 },
+  { field: "inspectionID", headerName: "Inspection ID", flex: 1 },
+  { field: "name", headerName: "Name", flex: 1 },
+  {
+    field: "standardName",
+    headerName: "Standard",
+    description: "This is the standard of inspection.",
+    flex: 1,
+  },
+  {
+    field: "note",
+    headerName: "Note",
+    description: "Inspection's note.",
+    flex: 1,
+  },
+];
+
+interface History {
+  name: string;
+  createDate: string;
+  inspectionID: string;
+  standardID: string;
+  note: string;
+  standardName: string;
+  samplingDate: string;
+  samplingPoint: Array<[]>;
+  price: number;
+}
 
 function History() {
   const navigate = useNavigate();
+  const [history, setHistory] = useState<History[]>([]);
+  // const [selectedRows, setSelectedRows] = useState<string[] | []>([]);
+  // const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel | []>(
+  //   []
+  // );
+  const [selectedRows, setSelectedRows] = useState<string[]>([]);
+
+  useEffect(() => {
+    fetchHistory();
+  }, []);
+
+  const fetchHistory = async () => {
+    try {
+      const res = await fetch(`${BASE_API_URL}/history`);
+      const data = await res.json();
+      const transformedDate = data.map((item: any) => ({
+        ...item,
+        createDate: moment(item.createDate).format("DD/MM/YYYY HH:mm:ss"),
+      }));
+      setHistory(transformedDate);
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
   const handleClick = () => {
     navigate("/create");
   };
+  const handleDelete = async () => {
+    const res = await fetch(`${BASE_API_URL}/history`, {
+      method: "DELETE",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(selectedRows),
+    });
+    // if (res.ok) {
+    //   sethistory(
+    //     history.filter((row:any) => !selectedrows.includes(row.inspectionid))
+    //   );
+    // }
+    if (res.ok) {
+      setHistory(
+        history.filter((row) => !selectedRows.includes(row.inspectionID))
+      );
+      // setHistory((prev) =>
+      //   prev.filter((item) => !selectedRows.includes(item.inspectionID))
+      // );
+    }
+  };
+
+  const handleSelect = (rowSelectionModel: GridRowSelectionModel) => {
+    setSelectedRows(rowSelectionModel as string[]);
+  };
+
   return (
     <Header>
       <div
@@ -29,7 +115,7 @@ function History() {
           Create Inspection
         </button>
       </div>
-      <div className="container">
+      <div className="container mb-3">
         <div className="card">
           <div className="card-body ">
             <form className="d-flex flex-row row">
@@ -50,7 +136,7 @@ function History() {
                   className="w-100 form-control text-muted"
                 />
               </div>
-              <div className="col-md-4 mb-3">
+              <div className="col-md-4 mb-2">
                 <label className="form-label">To Date</label>
                 <input
                   type="datetime-local"
@@ -58,7 +144,7 @@ function History() {
                   className="form-control text-muted"
                 />
               </div>
-              <div className="d-flex justify-content-end ">
+              <div className="d-flex justify-content-end mt-2">
                 <button
                   type="submit"
                   className="d-flex btn text-white button-color align-align-items-center gap-1"
@@ -70,6 +156,46 @@ function History() {
             </form>
           </div>
         </div>
+      </div>
+      <div className="container mb-2 align-items-center d-flex">
+        {selectedRows.length > 0 && (
+          <>
+            <button
+              className="btn btn-outline-danger me-2"
+              onClick={handleDelete}
+            >
+              Delete
+            </button>
+            <span>Select items: {selectedRows.length} item(s)</span>
+          </>
+        )}
+      </div>
+      <div className="container" style={{ width: "100%" }}>
+        <DataGrid
+          rows={history}
+          columns={columns}
+          getRowId={(history) => history.inspectionID}
+          density="compact"
+          sx={{
+            ".MuiDataGrid-columnHeader": {
+              backgroundColor: "rgb(32, 123, 68)",
+              color: "white",
+              ".MuiSvgIcon-root": {
+                color: "white",
+              },
+            },
+          }}
+          initialState={{
+            pagination: {
+              paginationModel: { page: 0, pageSize: 10 },
+            },
+          }}
+          pageSizeOptions={[5, 10, 15]}
+          checkboxSelection
+          onRowSelectionModelChange={(selectionModel) =>
+            handleSelect(selectionModel)
+          }
+        />
       </div>
     </Header>
   );
