@@ -7,6 +7,7 @@ import { MdAdd } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { BASE_API_URL } from "../ApiConfig";
 import moment from "moment";
+import { error } from "console";
 
 const columns: GridColDef[] = [
   { field: "createDate", headerName: "Create Date - Time", flex: 1 },
@@ -41,10 +42,6 @@ interface History {
 function History() {
   const navigate = useNavigate();
   const [history, setHistory] = useState<History[]>([]);
-  // const [selectedRows, setSelectedRows] = useState<string[] | []>([]);
-  // const [selectedRows, setSelectedRows] = useState<GridRowSelectionModel | []>(
-  //   []
-  // );
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
 
   useEffect(() => {
@@ -76,11 +73,7 @@ function History() {
       },
       body: JSON.stringify(selectedRows),
     });
-    // if (res.ok) {
-    //   sethistory(
-    //     history.filter((row:any) => !selectedrows.includes(row.inspectionid))
-    //   );
-    // }
+    //
     if (res.ok) {
       setHistory(
         history.filter((row) => !selectedRows.includes(row.inspectionID))
@@ -88,6 +81,8 @@ function History() {
       // setHistory((prev) =>
       //   prev.filter((item) => !selectedRows.includes(item.inspectionID))
       // );
+    } else {
+      throw error(`Failed to delete data. Status: ${res.status}`);
     }
   };
 
@@ -101,16 +96,10 @@ function History() {
         className="d-flex justify-content-end container"
         // style={{ ...paddingXaxis }}
       >
-        {/* <InspecButton className="btn p-2 text-white">
-          Create Inspection
-        </InspecButton> */}
-
         <button
           onClick={handleClick}
           className="d-flex btn text-white button-color mb-4 align-items-center"
-          //   style={{ background: "rgb(32, 123, 68)" }}
         >
-          {/* <IoIosAdd size={25} /> */}
           <MdAdd size={25} />
           Create Inspection
         </button>
