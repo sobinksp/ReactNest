@@ -19,4 +19,15 @@ export class InspectionService {
     const inspections = await this.inspectionModel.find();
     return inspections;
   }
+
+  async deleteInspection(request: string[]): Promise<string> {
+    await this.inspectionModel
+      .deleteMany({ inspectionID: { $in: request } })
+      .exec();
+    return 'deleted successfully.';
+  }
+
+  async getInspectionById(id: string): Promise<Inspection> {
+    return await this.inspectionModel.findOne({ inspectionID: id });
+  }
 }

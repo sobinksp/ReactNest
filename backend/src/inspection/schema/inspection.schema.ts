@@ -1,14 +1,25 @@
 import { Prop, Schema, SchemaFactory } from '@nestjs/mongoose';
 import { Document, SchemaTypes } from 'mongoose';
+import { timestamp } from 'rxjs';
 import { v4 as uuidv4 } from 'uuid';
 
-@Schema({ collection: 'inspections' })
+interface GrainsProps {
+  length: number;
+  weight: number;
+  shape: string;
+  type: string;
+}
+
+interface JsonFileProps {
+  requestID: string;
+  imageURL: string;
+  grains: GrainsProps[];
+}
+
+@Schema({ collection: 'inspections', timestamps: true })
 export class Inspection extends Document {
   @Prop()
   name: string;
-
-  @Prop({ default: Date.now, type: SchemaTypes.Date })
-  createDate: Date;
 
   @Prop({ default: null })
   imageLink?: string;
@@ -46,6 +57,9 @@ export class Inspection extends Document {
       minLength: number;
     },
   ];
+
+  @Prop({ type: Object, default: null })
+  jsonFile: JsonFileProps;
 }
 
 export const InspectionSchema = SchemaFactory.createForClass(Inspection);
