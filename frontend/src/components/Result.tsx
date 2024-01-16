@@ -13,17 +13,17 @@ const Result = () => {
   );
 
   useEffect(() => {
-    console.log(inspectionData);
+    // if (!inspectionData) {
     const fetchData = async () => {
       const res = await fetch(`${BASE_API_URL}/history/${id}`);
       if (res.ok) {
         const data = await res.json();
-        console.log(data);
         setInspectionData(data);
       }
     };
     fetchData();
-  }, [id, inspectionData]);
+    // }
+  }, [id]);
 
   return (
     <Header>

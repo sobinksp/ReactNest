@@ -60,7 +60,6 @@ const EditInspection = () => {
       });
     }
     if (id === "datetime") {
-      console.log(inspectionData.samplingDate);
       setInspectionData((prev: any) => ({
         ...prev,
         samplingDate: moment(value).format("YYYY-MM-DDTHH:mm:ss"),
