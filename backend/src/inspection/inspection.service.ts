@@ -90,6 +90,9 @@ export class InspectionService {
     defective['undermilled'] =
       (grains.filter((grain) => grain.type === 'undermilled').length * 100) /
       totalGrains;
+    defective['total'] =
+      (grains.filter((grain) => grain.type !== 'white').length * 100) /
+      totalGrains;
     return { composition, defective };
   }
 
