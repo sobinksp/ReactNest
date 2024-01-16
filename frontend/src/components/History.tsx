@@ -7,7 +7,6 @@ import { MdAdd } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { BASE_API_URL } from "../ApiConfig";
 import moment from "moment";
-import { error } from "console";
 
 const columns: GridColDef[] = [
   { field: "createDate", headerName: "Create Date - Time", flex: 1 },
@@ -66,23 +65,27 @@ function History() {
     navigate("/create");
   };
   const handleDelete = async () => {
-    const res = await fetch(`${BASE_API_URL}/history`, {
-      method: "DELETE",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(selectedRows),
-    });
-    //
-    if (res.ok) {
-      setHistory(
-        history.filter((row) => !selectedRows.includes(row.inspectionID))
-      );
-      // setHistory((prev) =>
-      //   prev.filter((item) => !selectedRows.includes(item.inspectionID))
-      // );
-    } else {
-      throw error(`Failed to delete data. Status: ${res.status}`);
+    try {
+      const res = await fetch(`${BASE_API_URL}/history`, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        body: JSON.stringify(selectedRows),
+      });
+
+      if (res.ok) {
+        setHistory(
+          history.filter((row) => !selectedRows.includes(row.inspectionID))
+        );
+        // setHistory((prev) =>
+        //   prev.filter((item) => !selectedRows.includes(item.inspectionID))
+        // );
+      } else {
+        alert(`Failed to delete data. Status: ${res.status}`);
+      }
+    } catch (error) {
+      alert(error);
     }
   };
 
@@ -161,6 +164,7 @@ function History() {
       </div>
       <div className="container" style={{ width: "100%" }}>
         <DataGrid
+          onRowClick={(RC) => navigate(`inspection/${RC.id}`)}
           rows={history}
           columns={columns}
           getRowId={(history) => history.inspectionID}
@@ -172,6 +176,9 @@ function History() {
               ".MuiSvgIcon-root": {
                 color: "white",
               },
+            },
+            ".MuiDataGrid-row": {
+              cursor: "pointer",
             },
           }}
           initialState={{

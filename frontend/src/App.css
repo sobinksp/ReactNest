@@ -72,3 +72,8 @@ body {
 .card-color {
   background-color: rgb(255, 255, 255);
 }
+
+thead th {
+  /* background-color: rgb(241, 241, 241); */
+  background-color: rgb(241, 241, 241) !important;
+}
