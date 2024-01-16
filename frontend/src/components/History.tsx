@@ -2,7 +2,7 @@ import { useNavigate } from "react-router-dom";
 import Header from "./Header";
 import { AiOutlineSearch } from "react-icons/ai";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
-import { GridRowSelectionModel, GridCallbackDetails } from "@mui/x-data-grid";
+import { GridRowSelectionModel } from "@mui/x-data-grid";
 import { MdAdd } from "react-icons/md";
 import { useEffect, useState } from "react";
 import { BASE_API_URL } from "../ApiConfig";
