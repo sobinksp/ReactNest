@@ -9,21 +9,20 @@ const Result = () => {
   const location = useLocation();
   const navigate = useNavigate();
   const [inspectionData, setInspectionData] = useState(
-    location.state?.data || null
+    location?.state?.data || null
   );
+
   useEffect(() => {
     console.log(inspectionData);
-    if (!inspectionData) {
-      const fetchData = async () => {
-        const res = await fetch(`${BASE_API_URL}/history/${id}`);
-        if (res.ok) {
-          const data = await res.json();
-          console.log(data);
-          setInspectionData(data);
-        }
-      };
-      fetchData();
-    }
+    const fetchData = async () => {
+      const res = await fetch(`${BASE_API_URL}/history/${id}`);
+      if (res.ok) {
+        const data = await res.json();
+        console.log(data);
+        setInspectionData(data);
+      }
+    };
+    fetchData();
   }, [id, inspectionData]);
 
   return (
@@ -54,6 +53,9 @@ const Result = () => {
             <button
               className="btn button-color text-white"
               style={{ width: 60 }}
+              onClick={() =>
+                navigate(`/edit/${id}`, { state: { data: inspectionData } })
+              }
             >
               Edit
             </button>
