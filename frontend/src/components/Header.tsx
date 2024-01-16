@@ -1,6 +1,7 @@
 // import styled from "styled-components";
 
 import { ReactNode } from "react";
+import { Link } from "react-router-dom";
 
 // const HeaderDiv = styled.div`
 //   background-color: rgb(241, 241, 241);
@@ -28,7 +29,12 @@ const Home: React.FC<HomeProps> = ({ children }) => {
           //   paddingLeft: "4rem",
         }}
       >
-        <div className="container">EASYRICE TEST</div>
+        <div className="container ">
+          {" "}
+          <Link className="text-decoration-none text-reset" to="/">
+            EASYRICE TEST
+          </Link>
+        </div>
         {/* EASYRICE TEST */}
       </div>
       {children}
