@@ -244,22 +244,15 @@ const Result = () => {
                   <tr>
                     <td className="">ข้าวเต็มเมล็ด</td>
                     <td className="text-muted ">
-                      {inspectionData?.standardData
-                        ? `>= ${inspectionData?.standardData[0].minLength}`
-                        : ""}
+                      {inspectionData?.standardData[0]?.conditionMin === "GT"
+                        ? ">"
+                        : "<"}{" "}
+                      {inspectionData?.standardData[0]?.minLength}
                     </td>
                     <td className="text-success">
-                      {inspectionData?.jsonFile
-                        ? `${(
-                            (inspectionData?.jsonFile?.grains?.filter(
-                              (grain: any) =>
-                                grain.length >=
-                                inspectionData?.standardData[0].minLength
-                            ).length *
-                              100) /
-                            inspectionData?.jsonFile?.grains?.length
-                          ).toFixed(2)} %`
-                        : "0.00 %"}
+                      {`${inspectionData?.calculatedResult?.composition?.wholegrain?.toFixed(
+                        2
+                      )} %`}
                     </td>
                   </tr>
                   <tr>
@@ -272,19 +265,9 @@ const Result = () => {
                         : ""}
                     </td>
                     <td className="text-success">
-                      {inspectionData?.jsonFile
-                        ? `${(
-                            (inspectionData?.jsonFile?.grains?.filter(
-                              (grain: any) =>
-                                grain.length <
-                                  inspectionData?.standardData[1].maxLength &&
-                                grain.length >=
-                                  inspectionData?.standardData[1].minLength
-                            ).length *
-                              100) /
-                            inspectionData?.jsonFile?.grains?.length
-                          ).toFixed(2)} %`
-                        : "0.00 %"}
+                      {`${inspectionData?.calculatedResult?.composition?.broken_rice1?.toFixed(
+                        2
+                      )} %`}
                     </td>
                   </tr>
                   <tr>
@@ -297,19 +280,9 @@ const Result = () => {
                         : ""}
                     </td>
                     <td className="text-success">
-                      {inspectionData?.jsonFile
-                        ? `${(
-                            (inspectionData?.jsonFile?.grains?.filter(
-                              (grain: any) =>
-                                grain.length <
-                                  inspectionData?.standardData[2].maxLength &&
-                                grain.length >=
-                                  inspectionData?.standardData[2].minLength
-                            ).length *
-                              100) /
-                            inspectionData?.jsonFile?.grains?.length
-                          ).toFixed(2)} %`
-                        : "0.00 %"}
+                      {`${inspectionData?.calculatedResult?.composition?.broken_rice2?.toFixed(
+                        2
+                      )} %`}
                     </td>
                   </tr>
                 </tbody>
@@ -319,7 +292,7 @@ const Result = () => {
           <div className="card border-0">
             <div className="card-body">
               <h3>Defect Rice</h3>
-              <table className="table table-hover">
+              <table className="table  table-hover">
                 <thead className="">
                   <tr>
                     <th className="col-10" scope="col">
@@ -334,31 +307,45 @@ const Result = () => {
                 <tbody>
                   <tr>
                     <td className="">yellow</td>
-                    <td className="text-success">0.00%</td>
+                    <td className="text-success">{`${inspectionData?.calculatedResult?.defective?.yellow?.toFixed(
+                      2
+                    )} %`}</td>
                   </tr>
                   <tr>
                     <td className="">paddy</td>
-                    <td className="text-success">0.00%</td>
+                    <td className="text-success">{`${inspectionData?.calculatedResult?.defective?.paddy?.toFixed(
+                      2
+                    )} %`}</td>
                   </tr>
                   <tr>
                     <td className="">damaged</td>
-                    <td className="text-success">0.00%</td>
+                    <td className="text-success">{`${inspectionData?.calculatedResult?.defective?.damage?.toFixed(
+                      2
+                    )} %`}</td>
                   </tr>
                   <tr>
                     <td className="">glutinous</td>
-                    <td className="text-success">0.00%</td>
+                    <td className="text-success">{`${inspectionData?.calculatedResult?.defective?.glutinous?.toFixed(
+                      2
+                    )} %`}</td>
                   </tr>
                   <tr>
                     <td className="">chalky</td>
-                    <td className="text-success">0.00%</td>
+                    <td className="text-success">{`${inspectionData?.calculatedResult?.defective?.chalky?.toFixed(
+                      2
+                    )} %`}</td>
                   </tr>
                   <tr>
                     <td className="">red</td>
-                    <td className="text-success">0.00%</td>
+                    <td className="text-success">{`${inspectionData?.calculatedResult?.defective?.red?.toFixed(
+                      2
+                    )} %`}</td>
                   </tr>
                   <tr>
                     <td className="">Total</td>
-                    <td className="text-success">0.00%</td>
+                    <td className="text-success">{`${inspectionData?.calculatedResult?.defective?.total?.toFixed(
+                      2
+                    )} %`}</td>
                   </tr>
                 </tbody>
               </table>
