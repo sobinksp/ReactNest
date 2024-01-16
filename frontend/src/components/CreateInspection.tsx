@@ -4,10 +4,9 @@ import { useNavigate } from "react-router-dom";
 import { BASE_API_URL } from "../ApiConfig";
 // import styled from "styled-components";
 
-interface Standard {
+interface StandardProps {
   id: string;
   name: string;
-  createDate: string;
   standardData: Array<{
     conditionMax: string;
     conditionMin: string;
@@ -18,26 +17,32 @@ interface Standard {
     minLength: number;
   }>;
 }
-
+interface jsonFileProps {
+  requestID: string;
+  imageURL: string;
+  grains: Array<{}>;
+}
 const CreateInspection = () => {
   //   const CustomSelect = styled.select`
   //     option[value=""] {
   //       color: blue;
   //     }
-  //   `;
+  //   `
   const navigate = useNavigate();
   const [name, setName] = useState("");
-
-  const [standards, setStandards] = useState<Standard[]>([]);
-  const [selectedStandard, setSelectedStandard] = useState<Standard | null>(
-    null
-  );
-
-  const [file, setFile] = useState<File | null>(null);
+  const [standards, setStandards] = useState<StandardProps[]>([]);
+  const [selectedStandard, setSelectedStandard] =
+    useState<StandardProps | null>(null);
+  const [jsonFile, setJsonFile] = useState<jsonFileProps | null>(null);
   const [note, setNote] = useState("");
   const [price, setPrice] = useState<string | null>(null);
   const [sampling, setSampling] = useState<string[]>([]);
   const [datetime, setDatetime] = useState<string | null>(null);
+  const [inspectionData, setInspectionData] = useState<Object | null>(null); // might not needed
+
+  useEffect(() => {
+    fetchStandards();
+  }, []);
 
   const fetchStandards = async () => {
     try {
@@ -46,19 +51,16 @@ const CreateInspection = () => {
       const data = await res.json();
       setStandards(data);
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   };
-
-  useEffect(() => {
-    fetchStandards();
-  }, []);
 
   const isValidPrice = (input: number) => {
     return /^(100000(\.0{1,2})?|([1-9]\d{0,4}(\.\d{1,2})?|0(\.\d{1,2})?))$/.test(
       String(input)
     );
   };
+
   // name
   const handleName = (e: ChangeEvent<HTMLInputElement>) => {
     setName(e.target.value);
@@ -75,28 +77,28 @@ const CreateInspection = () => {
 
   // file upload
   const handleFile = (e: ChangeEvent<HTMLInputElement>) => {
-    if (e.target.files) setFile(e.target.files[0]);
+    const file = e.target?.files?.[0];
+    if (file) {
+      const reader = new FileReader();
+      reader.onload = (e) => {
+        try {
+          const parsedJson = JSON.parse(e.target?.result as string);
+          setJsonFile(parsedJson);
+        } catch {
+          console.error("Error parsing file.");
+        }
+      };
+      reader.readAsText(file);
+    }
   };
+
   const handleNote = (e: ChangeEvent<HTMLInputElement>) => {
     setNote(e.target.value);
+    console.log(jsonFile);
   };
 
-  const handleChange = (
-    e: ChangeEvent<HTMLInputElement | HTMLSelectElement>
-  ) => {
-    const { id, value } = e.target;
-    // upload file
-    if (id === "jsonFile") {
-      setFile(e.target.files[0]);
-    }
-
-    // regex for price input
-    if (id === "price" && isValidPrice(Number(value))) {
-      setPrice(value);
-    }
-  };
   const handlePrice = (e: ChangeEvent<HTMLInputElement>) => {
-    setPrice(e.target.value);
+    if (isValidPrice(Number(e.target.value))) setPrice(e.target.value);
   };
   const handleSampling = (e: ChangeEvent<HTMLInputElement>) => {
     setSampling((prevSampling) =>
@@ -105,9 +107,11 @@ const CreateInspection = () => {
         : prevSampling.filter((item) => item !== e.target.value)
     );
   };
+
   const handleDatetime = (e: ChangeEvent<HTMLInputElement>) => {
     setDatetime(e.target.value);
   };
+
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     try {
@@ -118,6 +122,7 @@ const CreateInspection = () => {
         },
         body: JSON.stringify({
           name: name,
+          imageLink: jsonFile?.imageURL,
           standardID: selectedStandard?.id,
           note: note,
           standardName: selectedStandard?.name,
@@ -125,16 +130,19 @@ const CreateInspection = () => {
           samplingPoint: sampling,
           price: price,
           standardData: selectedStandard?.standardData,
+          jsonFile: jsonFile,
         }),
       });
       if (res.ok) {
         const data = await res.json();
-        console.log(data);
+        setInspectionData(data);
+        navigate(`/inspection/${data.inspectionID}`, { state: { data: data } });
       }
     } catch (error) {
-      console.log(error);
+      alert(error);
     }
   };
+
   const handleCancelClick = () => {
     navigate("/");
   };
@@ -142,8 +150,8 @@ const CreateInspection = () => {
   return (
     <Header>
       <h1 className="text-center mb-4 ">{"Create  Inspection"}</h1>
-      <div className="d-flex justify-content-center ">
-        <div className="card shadow border-white" style={{ maxWidth: "370px" }}>
+      <div className="container d-flex justify-content-center">
+        <div className="card shadow border-0" style={{ maxWidth: "370px" }}>
           <div className="card-body">
             <form onSubmit={handleSubmit}>
               <div className="d-flex flex-column mb-2">
@@ -191,7 +199,6 @@ const CreateInspection = () => {
                   type="file"
                   accept=".json"
                   id="jsonFile"
-                  placeholder="Inspection Name"
                   onChange={handleFile}
                   className="form-control"
                 />
