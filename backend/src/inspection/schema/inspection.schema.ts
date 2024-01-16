@@ -33,8 +33,8 @@ export class Inspection extends Document {
   @Prop({ default: null })
   imageLink?: string;
 
-  // @Prop({ unique: true, required: true, default: () => uuidv4() })
-  @Prop({ unique: true, required: true })
+  @Prop({ unique: true, required: true, default: () => uuidv4() })
+  // @Prop({ unique: true, required: true })
   inspectionID?: string;
 
   @Prop({ default: null })

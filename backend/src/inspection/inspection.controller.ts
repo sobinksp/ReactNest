@@ -6,6 +6,7 @@ import {
   Param,
   Post,
   Put,
+  Query,
 } from '@nestjs/common';
 import { InspectionService } from './inspection.service';
 import { Inspection } from './schema/inspection.schema';
@@ -21,8 +22,11 @@ export class InspectionController {
   }
 
   @Get()
-  async getAllInspections(): Promise<Inspection[]> {
-    return this.inspectionService.getAllInspection();
+  async getAllInspections(
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+  ): Promise<Inspection[]> {
+    return this.inspectionService.getAllInspection(page, limit);
   }
 
   @Delete()
