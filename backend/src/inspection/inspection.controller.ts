@@ -25,8 +25,9 @@ export class InspectionController {
   async getAllInspections(
     @Query('page') page?: number,
     @Query('limit') limit?: number,
+    @Query('id') id?: string,
   ): Promise<Inspection[]> {
-    return this.inspectionService.getAllInspection(page, limit);
+    return this.inspectionService.getAllInspection(page, limit, id);
   }
 
   @Delete()

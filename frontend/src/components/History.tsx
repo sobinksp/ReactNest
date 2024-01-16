@@ -41,6 +41,7 @@ interface History {
 function History() {
   const navigate = useNavigate();
   const [history, setHistory] = useState<History[]>([]);
+  const [searchId, setSearchId] = useState<string | null>(null);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [rowCount, setRowCount] = useState(10);
   const [paginationModel, setPaginationModel] = useState({
@@ -52,10 +53,16 @@ function History() {
     fetchHistory();
   }, [paginationModel]);
 
+  const handleSearchSubmit = (e: React.FormEvent<HTMLInputElement>) => {
+    e.preventDefault();
+    fetchHistory();
+  };
   const fetchHistory = async () => {
     try {
       const res = await fetch(
-        `${BASE_API_URL}/history?page=${paginationModel.page}&limit=${paginationModel.pageSize}`
+        `${BASE_API_URL}/history?page=${paginationModel.page}&limit=${
+          paginationModel.pageSize
+        }&id=${searchId || ""}`
       );
       const data = await res.json();
       console.log(data);
@@ -119,12 +126,14 @@ function History() {
       <div className="container mb-3">
         <div className="card">
           <div className="card-body ">
-            <form className="d-flex flex-row row">
+            <form onSubmit={handleSearchSubmit} className="d-flex flex-row row">
               <div className="col-md-4">
                 <label className="form-label">ID</label>
                 <input
                   type="text"
-                  id="id"
+                  id="searchId"
+                  value={searchId || ""}
+                  onChange={(e) => setSearchId(e.target.value)}
                   placeholder="Search with ID"
                   className="form-control"
                 />

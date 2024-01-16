@@ -106,12 +106,17 @@ export class InspectionService {
     return createdInspection.save();
   }
 
-  async getAllInspection(page: number = 1, limit: number = 10): Promise<any> {
+  async getAllInspection(
+    page: number = 1,
+    limit: number = 10,
+    id: string,
+  ): Promise<any> {
     const skip = page * limit;
-    const inspections = await this.inspectionModel
-      .find()
-      .skip(skip)
-      .limit(limit);
+    let query = this.inspectionModel.find();
+    if (id) {
+      query = query.where('inspectionID').equals(id);
+    }
+    const inspections = await query.find().skip(skip).limit(limit);
     const totalCount = await this.inspectionModel.countDocuments();
     return { inspections, totalCount };
   }
