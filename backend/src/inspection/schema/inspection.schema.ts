@@ -16,6 +16,15 @@ interface JsonFileProps {
   grains: GrainsProps[];
 }
 
+interface calculationProps {
+  composition: {
+    [key: string]: number;
+  };
+  defective: {
+    [key: string]: number;
+  };
+}
+
 @Schema({ collection: 'inspections', timestamps: true })
 export class Inspection extends Document {
   @Prop()
@@ -60,6 +69,9 @@ export class Inspection extends Document {
 
   @Prop({ type: Object, default: null })
   jsonFile: JsonFileProps;
+
+  @Prop({ type: Object, default: null })
+  calculatedResult: calculationProps;
 }
 
 export const InspectionSchema = SchemaFactory.createForClass(Inspection);
