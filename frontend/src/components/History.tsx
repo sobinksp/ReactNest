@@ -42,20 +42,30 @@ function History() {
   const navigate = useNavigate();
   const [history, setHistory] = useState<History[]>([]);
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
+  const [rowCount, setRowCount] = useState(10);
+  const [paginationModel, setPaginationModel] = useState({
+    page: 0,
+    pageSize: 10,
+  });
 
   useEffect(() => {
     fetchHistory();
-  }, []);
+  }, [paginationModel]);
 
   const fetchHistory = async () => {
     try {
-      const res = await fetch(`${BASE_API_URL}/history`);
+      const res = await fetch(
+        `${BASE_API_URL}/history?page=${paginationModel.page}&limit=${paginationModel.pageSize}`
+      );
       const data = await res.json();
-      const transformedDate = data.map((item: any) => ({
+      console.log(data);
+      const transformedDate = data.inspections.map((item: any) => ({
         ...item,
         createDate: moment(item.createDate).format("DD/MM/YYYY HH:mm:ss"),
       }));
+
       setHistory(transformedDate);
+      setRowCount(data.totalCount);
     } catch (error) {
       console.log(error);
     }
@@ -78,9 +88,8 @@ function History() {
         setHistory(
           history.filter((row) => !selectedRows.includes(row.inspectionID))
         );
-        // setHistory((prev) =>
-        //   prev.filter((item) => !selectedRows.includes(item.inspectionID))
-        // );
+
+        fetchHistory();
       } else {
         alert(`Failed to delete data. Status: ${res.status}`);
       }
@@ -181,16 +190,21 @@ function History() {
               cursor: "pointer",
             },
           }}
-          initialState={{
-            pagination: {
-              paginationModel: { page: 0, pageSize: 10 },
-            },
-          }}
-          pageSizeOptions={[5, 10, 15]}
+          // initialState={{
+          //   pagination: {
+          //     paginationModel: { page: 0, pageSize: 10 },
+          //   },
+          // }}
+          pageSizeOptions={[5, 10]}
           checkboxSelection
           onRowSelectionModelChange={(selectionModel) =>
             handleSelect(selectionModel)
           }
+          pagination
+          paginationMode="server"
+          paginationModel={paginationModel}
+          onPaginationModelChange={setPaginationModel}
+          rowCount={rowCount}
         />
       </div>
     </Header>
