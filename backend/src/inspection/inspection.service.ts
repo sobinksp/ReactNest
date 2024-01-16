@@ -121,4 +121,14 @@ export class InspectionService {
   async getInspectionById(id: string): Promise<Inspection> {
     return await this.inspectionModel.findOne({ inspectionID: id });
   }
+
+  async updateInspectionById(
+    id: string,
+    request: Inspection,
+  ): Promise<Inspection> {
+    return await this.inspectionModel.findOneAndUpdate(
+      { inspectionID: id },
+      request,
+    );
+  }
 }

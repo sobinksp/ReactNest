@@ -1,4 +1,12 @@
-import { Body, Controller, Delete, Get, Param, Post } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  Post,
+  Put,
+} from '@nestjs/common';
 import { InspectionService } from './inspection.service';
 import { Inspection } from './schema/inspection.schema';
 
@@ -25,5 +33,13 @@ export class InspectionController {
   @Get(':id')
   async getInspectionById(@Param('id') id: string): Promise<Inspection> {
     return this.inspectionService.getInspectionById(id);
+  }
+
+  @Put('/edit/:id')
+  async updateInspectionByID(
+    @Param('id') id: string,
+    @Body() request: Inspection,
+  ): Promise<Inspection> {
+    return this.inspectionService.updateInspectionById(id, request);
   }
 }
