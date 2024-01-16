@@ -17,11 +17,19 @@ interface StandardProps {
     minLength: number;
   }>;
 }
+interface GrainsProps {
+  length: number;
+  weight: number;
+  shape: string;
+  type: string;
+}
+
 interface jsonFileProps {
   requestID: string;
   imageURL: string;
-  grains: Array<{}>;
+  grains: GrainsProps[];
 }
+
 const CreateInspection = () => {
   //   const CustomSelect = styled.select`
   //     option[value=""] {
@@ -31,14 +39,12 @@ const CreateInspection = () => {
   const navigate = useNavigate();
   const [name, setName] = useState("");
   const [standards, setStandards] = useState<StandardProps[]>([]);
-  const [selectedStandard, setSelectedStandard] =
-    useState<StandardProps | null>(null);
+  const [selectedStandard, setSelectedStandard] = useState<StandardProps>();
   const [jsonFile, setJsonFile] = useState<jsonFileProps | null>(null);
   const [note, setNote] = useState("");
   const [price, setPrice] = useState<string | null>(null);
   const [sampling, setSampling] = useState<string[]>([]);
   const [datetime, setDatetime] = useState<string | null>(null);
-  const [inspectionData, setInspectionData] = useState<Object | null>(null); // might not needed
 
   useEffect(() => {
     fetchStandards();
@@ -94,7 +100,6 @@ const CreateInspection = () => {
 
   const handleNote = (e: ChangeEvent<HTMLInputElement>) => {
     setNote(e.target.value);
-    console.log(jsonFile);
   };
 
   const handlePrice = (e: ChangeEvent<HTMLInputElement>) => {
@@ -135,7 +140,6 @@ const CreateInspection = () => {
       });
       if (res.ok) {
         const data = await res.json();
-        setInspectionData(data);
         navigate(`/inspection/${data.inspectionID}`, { state: { data: data } });
       }
     } catch (error) {
