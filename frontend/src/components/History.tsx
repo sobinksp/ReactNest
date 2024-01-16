@@ -9,7 +9,7 @@ import { BASE_API_URL } from "../ApiConfig";
 import moment from "moment";
 
 const columns: GridColDef[] = [
-  { field: "createDate", headerName: "Create Date - Time", flex: 1 },
+  { field: "createdAt", headerName: "Create Date - Time", flex: 1 },
   { field: "inspectionID", headerName: "Inspection ID", flex: 1 },
   { field: "name", headerName: "Name", flex: 1 },
   {
@@ -42,6 +42,8 @@ function History() {
   const navigate = useNavigate();
   const [history, setHistory] = useState<History[]>([]);
   const [searchId, setSearchId] = useState<string | null>(null);
+  const [dateFrom, setDateFrom] = useState<string>("");
+  const [dateTo, setDateTo] = useState<string>("");
   const [selectedRows, setSelectedRows] = useState<string[]>([]);
   const [rowCount, setRowCount] = useState(10);
   const [paginationModel, setPaginationModel] = useState({
@@ -53,7 +55,7 @@ function History() {
     fetchHistory();
   }, [paginationModel]);
 
-  const handleSearchSubmit = (e: React.FormEvent<HTMLInputElement>) => {
+  const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     fetchHistory();
   };
@@ -62,13 +64,15 @@ function History() {
       const res = await fetch(
         `${BASE_API_URL}/history?page=${paginationModel.page}&limit=${
           paginationModel.pageSize
-        }&id=${searchId || ""}`
+        }&id=${searchId || ""}&dateFrom=${dateFrom || ""}&dateTo=${
+          dateTo || ""
+        }`
       );
       const data = await res.json();
       console.log(data);
       const transformedDate = data.inspections.map((item: any) => ({
         ...item,
-        createDate: moment(item.createDate).format("DD/MM/YYYY HH:mm:ss"),
+        createdAt: moment(item.createdAt).format("DD/MM/YYYY HH:mm:ss"),
       }));
 
       setHistory(transformedDate);
@@ -143,6 +147,12 @@ function History() {
                 <input
                   type="datetime-local"
                   id="dateFrom"
+                  value={moment(dateFrom).format("YYYY-MM-DDTHH:mm:ss")}
+                  onChange={(e) =>
+                    setDateFrom(
+                      moment(e.target.value).format("YYYY-MM-DDTHH:mm:ss")
+                    )
+                  }
                   className="w-100 form-control text-muted"
                 />
               </div>
@@ -151,6 +161,12 @@ function History() {
                 <input
                   type="datetime-local"
                   id="dateTo"
+                  value={moment(dateTo).format("YYYY-MM-DDTHH:mm:ss")}
+                  onChange={(e) =>
+                    setDateTo(
+                      moment(e.target.value).format("YYYY-MM-DDTHH:mm:ss")
+                    )
+                  }
                   className="form-control text-muted"
                 />
               </div>
