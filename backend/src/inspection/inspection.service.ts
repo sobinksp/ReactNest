@@ -110,11 +110,20 @@ export class InspectionService {
     page: number = 1,
     limit: number = 10,
     id: string,
+    dateFrom: Date,
+    dateTo: Date,
   ): Promise<any> {
     const skip = page * limit;
     let query = this.inspectionModel.find();
     if (id) {
       query = query.where('inspectionID').equals(id);
+    }
+    console.log('datetime', dateFrom, dateTo);
+    if (dateFrom && dateTo) {
+      console.log('datetime in', dateFrom, dateTo);
+      const start = new Date(dateFrom);
+      const end = new Date(dateTo);
+      query = query.where('createdAt').gte(start.getTime()).lte(end.getTime());
     }
     const inspections = await query.find().skip(skip).limit(limit);
     const totalCount = await this.inspectionModel.countDocuments();

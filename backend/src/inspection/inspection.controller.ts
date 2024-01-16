@@ -26,8 +26,16 @@ export class InspectionController {
     @Query('page') page?: number,
     @Query('limit') limit?: number,
     @Query('id') id?: string,
+    @Query('dateFrom') dateFrom?: Date,
+    @Query('dateTo') dateTo?: Date,
   ): Promise<Inspection[]> {
-    return this.inspectionService.getAllInspection(page, limit, id);
+    return this.inspectionService.getAllInspection(
+      page,
+      limit,
+      id,
+      dateFrom,
+      dateTo,
+    );
   }
 
   @Delete()
