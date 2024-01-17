@@ -76,7 +76,6 @@ function History() {
         }`
       );
       const data = await res.json();
-      console.log(data);
       const transformedDate = data.inspections.map((item: any) => ({
         ...item,
         createdAt: moment(item.createdAt).format("DD/MM/YYYY HH:mm:ss"),
