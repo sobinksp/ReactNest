@@ -1,4 +1,4 @@
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import Header from "./Header";
 import { AiOutlineSearch } from "react-icons/ai";
 import { DataGrid, GridColDef } from "@mui/x-data-grid";
@@ -57,6 +57,13 @@ function History() {
 
   const handleSearchSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+    fetchHistory();
+  };
+
+  const handleReset = () => {
+    setSearchId(null);
+    setDateFrom("");
+    setDateTo("");
     fetchHistory();
   };
   const fetchHistory = async () => {
@@ -170,7 +177,19 @@ function History() {
                   className="form-control text-muted"
                 />
               </div>
-              <div className="d-flex justify-content-end mt-2">
+              <div className="d-flex justify-content-between mt-2">
+                <button
+                  className="text-danger"
+                  style={{
+                    textDecoration: "underline",
+                    border: "none",
+                    background: "none",
+                  }}
+                  onClick={handleReset}
+                >
+                  Clear Filter
+                </button>
+
                 <button
                   type="submit"
                   className="d-flex btn text-white button-color align-align-items-center gap-1"
