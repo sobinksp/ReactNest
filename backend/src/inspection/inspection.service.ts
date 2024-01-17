@@ -118,9 +118,7 @@ export class InspectionService {
     if (id) {
       query = query.where('inspectionID').equals(id);
     }
-    console.log('datetime', dateFrom, dateTo);
     if (dateFrom && dateTo) {
-      console.log('datetime in', dateFrom, dateTo);
       const start = new Date(dateFrom);
       const end = new Date(dateTo);
       query = query.where('createdAt').gte(start.getTime()).lte(end.getTime());
